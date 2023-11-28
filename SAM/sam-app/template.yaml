@@ -24,6 +24,9 @@ Resources:
           Properties:
             Path: /hello
             Method: get
+      policies:
+        - DynamoDBCrudPolicy:
+           TableName: !Ref DynamoDBTabla
             
   DynamoDBTabla:
     Type: 'AWS::Serverless::SimpleTable'

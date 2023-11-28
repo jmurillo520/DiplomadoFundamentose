@@ -28,17 +28,6 @@ def create_table(nombre_tabla):
         BillingMode='PAY_PER_REQUEST'
     )
     print("Tabla creada exitosamente")
-#Crear funcion para insertar elemento en la tabla de dynamondb
-def insert_item(nombre_tabla, id, nombre, apellido):
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table('nombre_tabla')
-    table.put_item(
-        Item={
-            'id': '1',
-            'name': 'Julieth',
-            'age': '20'
-        }
-    )
     
 #crear funcion para insertar elemento en la tabla de dynamondb
 def insert_item(nombre_tabla, id, nombre, apellido):
@@ -48,7 +37,7 @@ def insert_item(nombre_tabla, id, nombre, apellido):
         Item={
             'id': id,
             'name': nombre,
-            'age': apellido
+            'apellido': apellido
         }
     )
     print("Elemento insertado exitosamente")
@@ -62,11 +51,22 @@ def list_items(nombre_tabla):
     for item in items:
         print(item)
     print("Elementos mostrados exitosamente")
-    
-
-        
-
-        
+#Eliminar elemento dede la tabla de dynamondb
+def delete_item(nombre_tabla, id):
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.Table(nombre_tabla)
+    table.delete_item(
+        Key={
+            'id': id
+        }
+    )
+    print("Elemento eliminado exitosamente")
+#Reconocer celebridad en imagen
+def reconocer_celebridad(imagen):
+    rekognition = boto3.client('rekognition')
+    response = rekognition.recognize_celebrities(Image={'Bytes': imagen})
+    print(response["Celebrityfaces"])
+           
 opcion=1
 while opcion != 0:
     print("Ingrese la opción que desea")
@@ -74,6 +74,8 @@ while opcion != 0:
     print("2. Crear tabla de dynamodb")
     print("3. Insertar elemento en tabla de dynamodb")
     print("4. Mostrar elementos de una tabla de dynamodb") 
+    print("5. Eliminar elemento de una tabla de dynamodb")
+    print("6. Reconocer celebridad en Imagen")
     print("0. Salir")
     opcion=int(input())
     if opcion == 1:
@@ -92,6 +94,16 @@ while opcion != 0:
     if opcion == 4:
         nombre_tabla=input("Ingrese el nombre de la tabla a mostrar")
         list_items(nombre_tabla)
+    if opcion == 5:
+        nombre_tabla=input("Ingrese el nombre de la tabla a eliminar")
+        id=input("Ingrese el id del elemento a eliminar")
+        delete_item(nombre_tabla, id)
+    if opcion == 6:
+        #convertir inimagen a bytes
+        with open("Imagen.jpg", "rb") as f:
+            imagen = f.read()
+            reconocer_celebridad(imagen)
+
     else:
         print("Opcion no valida")
         
